@@ -1,13 +1,21 @@
 // jest won't error out on DOM calls.
 // console.log(document.querySelector('p').innerHTML);
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener('DOMContentLoaded', async () => {
+  console.log('loaded');
 
-  getReservations()
+  // new Date('21 Feb 2020 10:00:00 GMT-0500')
+  const slot = Date.now();
+  await postData('Test', slot);
 
+  const reservations = await getData();
+
+  const rootEl = document.getElementById('root');
+
+  const els = reservations.map(rezz => {
+    const el = document.createElement('div');
+    el.innerText = `${rezz.name} ${new Date(rezz.slot).toLocaleString()}`;
+    rootEl.appendChild(el);
+    return el;
+  });
 });
-  function getReservations() {
-    fetch("http://localhost:3000/reservations")
-    .then(res => res.json())
-    .then(reservations => {console.log(reservations)})
-  }
